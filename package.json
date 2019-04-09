@@ -1,7 +1,7 @@
 {
   "name": "@hnct/ngutils",
   "scope": "hnct",
-  "version": "1.0.1",
+  "version": "1.0.2-beta.2",
   "description": "Contains some useful Angular utilities",
   "directories": {
     "test": "test"

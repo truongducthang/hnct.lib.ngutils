@@ -350,7 +350,7 @@ export class FormFlow implements OnInit {
             this.createView()
 
             if (shouldNavigate) this.startSearchProcess(this.curData)
-            else this.onReady.next(true)
+            else this.onReady.emit(true)
                 
         })
     }

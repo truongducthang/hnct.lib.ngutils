@@ -1,13 +1,14 @@
 {
   "name": "@hnct/ngutils",
   "scope": "hnct",
-  "version": "1.0.2-beta.2",
+  "version": "1.0.2-beta.6",
   "description": "Contains some useful Angular utilities",
   "directories": {
     "test": "test"
   },
-  "module": "./dist/src/index.js",
+  "module": "./dist/src/ts/index.js",
   "main": "./dist/hnct.ngutils.js",
+  "types": "./dist/src/ts/index.d.ts",
   "scripts": {
     "test": "test",
     "dist": "webpack --config ./webpack/webpack.prod.js && tsc --p tsconfig-dist.json",
@@ -50,9 +51,12 @@
     "webpack-hot-client": "^4.1.1",
     "webpack-merge": "^4.2.1",
     "webpack-serve": "^2.0.3",
-    "zone.js": "^0.8.29"
+    "zone.js": "^0.8.29",
+    "@angular/forms": "^7.2.12",
+    "@angular/router": "^7.2.12",
+    "jsonwebtoken": "^8.5.1"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@angular/forms": "^7.2.12",
     "@angular/router": "^7.2.12",
     "jsonwebtoken": "^8.5.1"

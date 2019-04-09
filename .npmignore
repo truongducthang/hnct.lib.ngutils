@@ -1,4 +1,4 @@
-src
-test
-webpack
-tsconfig*.*
+/src
+/test
+/webpack
+/tsconfig*.*

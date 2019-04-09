@@ -1,0 +1,16 @@
+<div *fflow="let form by buildForm; fflow as f; nav : navigate; search : search"  [formGroup]="form" [fcoord]="form" >
+
+    <div>
+        <label>Username</label><input formControlName="username" [(ferror)]="usernameError" />
+        <span *ngIf="usernameError">{{usernameError.msg}}</span>
+    </div>
+    <div>
+        <label>Password</label><input formControlName="password" [(ferror)]="passwordError" />
+        <span *ngIf="passwordError">{{passwordError.msg}}</span>
+    </div>
+
+    <div>
+        <button [form-flow-submit]="f">Submit</button>
+    </div>
+
+</div>

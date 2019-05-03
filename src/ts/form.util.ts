@@ -239,7 +239,7 @@ export class FormError implements OnInit, FormBindAware, OnDestroy {
 @Directive({
     selector: "[form-flow-submit]"
 })
-export class FormFlowSubmit implements OnInit {
+export class FormFlowSubmit {
 
     @Input("form-flow-submit")
     formFlow : FormFlow
@@ -250,11 +250,6 @@ export class FormFlowSubmit implements OnInit {
     onSubmit() {
         this.formFlow.startSearchProcess()
     }
-
-    ngOnInit() {
-        console.log(this.formFlow)
-    }
-
 }
 
 export interface FormFlowNavigationData {
@@ -262,7 +257,7 @@ export interface FormFlowNavigationData {
     actualData : any
 }
 
-export interface FormFlowSearchEvent {
+export interface FormFlowSubmitEvent {
     data : any,
     from : "Params" | "Form"
 }
@@ -305,12 +300,12 @@ export class FormFlow implements OnInit {
     needNavigation : (data : FormFlowNavigationData) => void
 
     /**
-     * Search action is navigationally triggered. This means that it only
+     * Submit action is navigationally triggered. This means that it only
      * produces event when the route with a query parameter searchData 
      * is visited
      */
-    @Input("fflowSearch")
-    search : (data : FormFlowSearchEvent) => void
+    @Input("fflowSubmit")
+    submit : (data : FormFlowSubmitEvent) => void
 
     @Output()
     onReady : EventEmitter<boolean> = new EventEmitter()
@@ -318,7 +313,7 @@ export class FormFlow implements OnInit {
     @Input()
     noNavigation = false
 
-    @Input()
+    @Input("fflowIgnoreInit")
     ignoreInit = true
 
     constructor(private route : ActivatedRoute, private viewContainer : ViewContainerRef, private templateRef : TemplateRef<FormFlowContext>) {
@@ -336,7 +331,7 @@ export class FormFlow implements OnInit {
                 if (this.builder) 
                     this.form = this.builder(this.curData)
 
-                this.search({ data : this.curData, from : "Params" })
+                this.submit({ data : this.curData, from : "Params" })
 
             } else {
                 
@@ -378,7 +373,7 @@ export class FormFlow implements OnInit {
                 actualData: raw
             })
         } else {
-            this.search({ data : raw, from : "Form" })
+            this.submit({ data : raw, from : "Form" })
         }
     }
 

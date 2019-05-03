@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { FormCreator, FormFlowNavigationData, FormFlowSearchEvent } from "../../src/ts";
+import { FormCreator, FormFlowNavigationData, FormFlowSubmitEvent } from "../../src/ts";
 import { Router, ActivatedRoute } from "@angular/router";
 
 @Component({
@@ -36,7 +36,7 @@ export class DemoForm {
         })
     }
 
-    search = (data : FormFlowSearchEvent) => {
+    search = (data : FormFlowSubmitEvent) => {
         console.log("Searching " + JSON.stringify(data))
     }
 }

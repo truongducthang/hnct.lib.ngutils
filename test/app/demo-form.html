@@ -1,4 +1,4 @@
-<div *fflow="let form by buildForm; fflow as f; nav : navigate; search : search"  [formGroup]="form" [fcoord]="form" >
+<div *fflow="let form by buildForm; fflow as f; nav : navigate; submit : search"  [formGroup]="form" [fcoord]="form" >
 
     <div>
         <label>Username</label><input formControlName="username" [(ferror)]="usernameError" />

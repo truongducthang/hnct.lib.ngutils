@@ -4,7 +4,6 @@ const abs = require('./helpers')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = webpackMerge(commonConfig, {
     mode: 'production',
@@ -38,7 +37,7 @@ module.exports = webpackMerge(commonConfig, {
     ],
 
     entry: {
-        main: './src/ts/index.ts'
+        main: './dist/src/ts/index.js'
     },
 
     module: {
@@ -53,21 +52,12 @@ module.exports = webpackMerge(commonConfig, {
     },
 
     optimization: {
-        minimizer: [
-            new UglifyJsPlugin({
-                cache: true,
-                parallel: true,
-                extractComments:true,
-                sourceMap: false // set to true if you want JS source maps
-            }),
-            new OptimizeCSSAssetsPlugin({})
-        ]
+        minimize: false
     },
     plugins : [
-        // new BundleAnalyzerPlugin({
-        //     analyzerMode: 'static'
-        // }),
-        new CleanWebpackPlugin()
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'static'
+        }),
     ],
 
     resolve: {

@@ -1,10 +1,12 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "declaration": true,
-    "outDir": "dist/src/ts"
+    "declaration": true
   },
   "exclude": [
     "test"
-  ] 
+  ],
+  "angularCompilerOptions": {
+    "strictMetadataEmit": true
+  }
 }

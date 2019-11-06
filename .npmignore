@@ -3,3 +3,4 @@
 /webpack
 /tsconfig*.*
 node_modules
+/dist/dev

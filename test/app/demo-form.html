@@ -1,4 +1,4 @@
-<div *fflow="let form by buildForm; fflow as f; nav : navigate; submit : search"  [formGroup]="form" [fcoord]="form" >
+<div *fflow="let fum by buildForm; fflow as f; nav : navigate; submit : search"  [formGroup]="fum" [fcoord]="fum" >
 
     <div>
         <label>Username</label><input formControlName="username" [(ferror)]="usernameError" />
@@ -10,7 +10,8 @@
     </div>
 
     <div>
-        <button [form-flow-submit]="f">Submit</button>
+        <button [disabled]="!f.canSubmit()" [form-flow-submit]="f">Submit</button>
+        <button [disabled]="!f.dirty()" (click)="f.reset()">Reset</button>
     </div>
 
 </div>

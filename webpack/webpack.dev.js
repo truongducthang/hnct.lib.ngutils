@@ -1,7 +1,6 @@
 const webpackMerge = require('webpack-merge');
 const commonConfig = require('./webpack.common.js');
 const abs = require("./helpers")
-const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = webpackMerge(commonConfig, {
@@ -14,7 +13,7 @@ module.exports = webpackMerge(commonConfig, {
     },
 
     output: {
-        path: abs(__dirname, "./dist"), // this path doesn't have any effect since in dev, we serve from memory (webpack-serve)
+        path: abs("./dist/dev"), 
         publicPath: '/',
         filename: '[name].js',
         chunkFilename: '[id].[name].chunk.js'
@@ -43,5 +42,11 @@ module.exports = webpackMerge(commonConfig, {
         new HtmlWebpackPlugin({
 			template: './test/index.html'
         })
-    ]
+    ],
+
+    devServer: {
+		contentBase: abs('./dist/dev'),
+		compress: true,
+		port: 8000
+	}
 });

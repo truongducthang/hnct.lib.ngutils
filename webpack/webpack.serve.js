@@ -1,16 +1,11 @@
-var webpackMerge = require('webpack-merge');
-var webpackConfig = require('./webpack.dev.js');
-var serve = require("webpack-serve");
+const webpackMerge = require('webpack-merge');
+const devConfig = require('./webpack.common.js');
+const abs = require("./helpers")
 
-serve({}, {
-	config: webpackConfig,
-	/*hot : {
-		port: 9080
-	},*/
-
-	hot: false,
-
-	port: 9090
-}).then( result => {
-	console.log("Webpack serve runs with result = ", result);
-})
+module.exports = webpackMerge(devConfig, {
+    devServer: {
+		contentBase: abs('./dist/dev'),
+		compress: true,
+		port: 9000
+	}
+});

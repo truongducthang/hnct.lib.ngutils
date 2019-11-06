@@ -1,5 +1,5 @@
 
-import {EventEmitter, Output, Directive, OnInit, HostListener, Input, ViewContainerRef, TemplateRef} from "@angular/core"
+import {EventEmitter, Output, Directive, OnInit, HostListener, Input, ViewContainerRef, TemplateRef, EmbeddedViewRef} from "@angular/core"
 import * as jwt from 'jsonwebtoken'
 import { ActivatedRoute } from "@angular/router";
 import { FormGroup } from "@angular/forms";
@@ -41,7 +41,8 @@ export class FormFlowContext {
  * involves setting forms from query parameters.
  */
 @Directive({
-    selector : "[fflow]"
+    selector : "[fflow]",
+    exportAs: "fflow"
 })
 export class FormFlow implements OnInit {
 
@@ -85,6 +86,8 @@ export class FormFlow implements OnInit {
     @Input("fflowIgnoreInit")
     ignoreInit = true
 
+    viewRef : EmbeddedViewRef<any>
+
     constructor(private route : ActivatedRoute, private viewContainer : ViewContainerRef, private templateRef : TemplateRef<FormFlowContext>) {
         
     }
@@ -115,14 +118,13 @@ export class FormFlow implements OnInit {
 
             if (shouldNavigate) this.startSearchProcess(this.curData)
             else this.onReady.emit(true)
-                
         })
     }
 
     createView() {
         this.viewContainer.clear();
         if (this.templateRef)
-            this.viewContainer.createEmbeddedView(this.templateRef, {
+            this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef, {
                 $implicit: this.form,
                 fflow : this
             });
@@ -163,6 +165,23 @@ export class FormFlow implements OnInit {
 		}
 
 		return c
+    }
+
+    canSubmit() {
+        return this.form && this.form.dirty && this.form.valid
+    }
+
+    dirty() {
+        return this.form && this.form.dirty
+    }
+
+    reset(newData : any) {
+
+        this.curData = newData || this.curData
+
+        this.form = this.builder(this.curData)
+        this.viewRef.context.$implicit = this.form
+
     }
 
 }

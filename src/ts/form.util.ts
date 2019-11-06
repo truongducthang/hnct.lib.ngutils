@@ -149,7 +149,7 @@ export class FormCreator {
                             (aV && _.isPlainObject(aV) && aV[IGNORE_ARR_KEY])
 
         var arr = ignore_array ? this.builder.control(values) : this.builder.array([])
-
+        
         // if the validator is an object and not an array, we have to search for SELF_KEY as the user might want overall array validation
         if (v && _.isPlainObject(v)) {
             if (v[SELF_KEY]) arr.setValidators(v[SELF_KEY] as ValidatorFn | ValidatorFn[])

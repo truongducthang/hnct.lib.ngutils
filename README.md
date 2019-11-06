@@ -113,7 +113,7 @@ function minArrayLength(length : number) : ValidatorFn {
 
 ### Form error messages
 
-There are simple directive to support display error messages easier. Let's say you have the above created `form` and want to add some validation messages and display it on the template.
+There are simple directives to support displaying error messages easier. Let's say you have the above created `form` and want to add some validation messages and display it on the template.
 
 ```typescript
 
@@ -218,5 +218,84 @@ var form : FormGroup = new FormCreator(fb, data).
 
 ```
 
-
 ## Form Flow
+
+In some situations, you might want to create a uri that contains your form data, and upon visiting that uri, the form is automatically filled. For example, you are implementing a search form, and it would be nice if you have a uri corresponding to the search criteria, which you can then copy and pass it to others.
+
+The `fflow` structural directive support this use case. It generally works as following:
+
+1. Check the activated route for any form data
+2. If form data exists, it deserializes and use it to create the form through invoking a configured builder with the data
+    1. It invoke the configured submit function once.
+3. If form data doesn't exist, it invoke the configured builder with no data
+
+The `fflow` works with `form-flow-submit` directive, which listen for click event on an element and invoke `fflow` navigation process.
+
+1. `form-flow-submit` is clicked
+2. `fflow` serializes the form using to JWT format
+3. `fflow` invokes a configured navigation method with a navigation event
+4. The configured navigation method should perform some custom logic and eventually, invoke the router to navigate to a route with the parameters containing the serialized search data
+5. `fflow` upon detecting the new route activated, it will perform the above flow
+
+### Example
+
+The `fflow` and `form-flow-submit` can be used in your template as following:
+
+```html
+
+<div *fflow="let form by buildForm; fflow as f; nav : navigate; submit : search"  [formGroup]="form" [fcoord]="form" >
+
+    <!-- display the form fields here -->
+
+    <div>
+        <button [disabled]="!f.canSubmit()" [form-flow-submit]="f">Submit</button>
+        <button [disabled]="!f.dirty()" (click)="f.reset()">Reset</button>
+    </div>
+
+</div>
+
+```
+
+### FFlow API and configuration
+
+Config | Microsyntax | Usage | Required | Type
+-------|-------------| ----- | -------- | ----
+$implicit | yes | Expose the form group for usage in the enclosed template. e.g `let form` | yes | FormGroup
+fflowBy | yes | Configure the builder that build the form group from the data object | yes | (data : any) => FormGroup
+fflow | yes | Expose the directive instance to be used in the enclosed template. e.g. `fflow as f` or `let f=fflow` | no | FormFlow
+fflowNav | yes | Configure the navigation function, which will be invoked upon `form-flow-submit` is clicked | yes if `noNavigation` is `false` | (data : FormFlowNavigationData) => void
+fflowSubmit | yes | Configure the submit function, which will be invoked upon detecting a navigation with form data on the uri | yes | (data : FormFlowSubmitEvent) => void
+fflowIgnoreInit | yes | Whether or not to ignore the first navigation if there is no form data detected on the activated route. Sometimes you might want to set this to `false`, for example you want to do a default search with default parameters for search form | no, default to `true` | Boolean
+noNavigation | no | Whether to do navigation on clicking `form-flow-submit` | no, default `false` | Boolean
+paramKey | no | The name of the parameter used on the uri | no, default = searchData | string
+jwtKey | no | The key used for JWT encoding | no, default = fflowkey | string
+
+There are some methods
+
+Method / Property | Usage
+-------|-------------
+canSubmit() | Check if this form can be submit. It is equivalent to checking if form exists, it is dirty and it is valid
+dirty() | Check if this form is dirty
+reset(data? : any) | Reset the form with an optional data. If no data is specified, the data used for created the form the first time will be used.
+form | The property for getting the form created
+
+### De-sugar syntax
+
+In the above example, we use the sugarized syntax (microsyntax) to configure `fflow`. However, using this syntax, you are not able to extract the `fflow` instance to use outside of its own enclosed template, e.g. in the case you want to put the `form-flow-submit` button outside of the `fflow`'s template. In this scenario, you can use de-sugar syntax instead
+
+```html
+
+    <ng-template fflow let-form [fflowBy]="buildForm" [fflowNav]="navigate" [fflowSubmit]="search" ref-fi="fflow">
+        <div [formGroup]='form' [fcoord]='form'>
+        <!-- display the form fields here -->
+        </div>
+    </ng-template>
+
+    <!-- The buttons are outside of the fflow's template but wants to access the fflow instance-->
+    <div>
+        <button [disabled]="!fi.canSubmit()" [form-flow-submit]="fi">Submit</button>
+        <button [disabled]="!fi.dirty()" (click)="fi.reset()">Reset</button>
+    </div>
+
+
+```
